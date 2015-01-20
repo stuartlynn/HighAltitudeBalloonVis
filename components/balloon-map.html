@@ -1,0 +1,58 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+
+<polymer-element name="balloon-map" attributes="lat lng">
+  <template>
+    <div id="map" class="map"></div>
+
+    <style>
+      #map{
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </template>
+
+  <script>
+    Polymer('balloon-map', {
+
+      domReady:function(){
+
+        this.width = (this.width ? this.width : this.offsetWidth)
+        this.height = (this.height ? this.height : this.offsetHeight)
+        this.style.width = this.width ;
+        this.style.height = this.height;
+
+        this.view = new ol.View({
+          center: ol.proj.transform([-87,41 ], 'EPSG:4326', 'EPSG:3857'),
+          zoom: 12
+        })
+
+        this.map = new ol.Map({
+          target: this.$.map,
+          layers: [
+          new ol.layer.Tile({
+            source: new ol.source.Stamen({layer: 'toner'})
+          })
+          ],
+          controls:[],
+          view:this.view
+        });
+
+      },
+      latChanged:function(){
+        if(this.lat >= -90 && this.lng <=90){
+          console.log("lng ", this.lng, " lat ",this.lat)
+          this.view.setCenter([this.lng, this.lat])
+        }
+      },
+      lngChanged:function(){
+        if(this.lng >= -180 && this.lng <=180){
+          console.log("lng ", this.lng, " lat ",this.lat)
+          this.view.setCenter([this.lng, this.lat])
+        }
+      }
+
+    })
+  </script>
+</polymer-element>

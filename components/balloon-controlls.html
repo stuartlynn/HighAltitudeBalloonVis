@@ -1,0 +1,55 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/core-icon/core-icon.html">
+<link rel="import" href="/bower_components/core-icons/core-icons.html">
+<link rel="import" href="/bower_components/core-icon-button/core-icon-button.html">
+
+
+<polymer-element name="balloon-controlls" attributes="time timeStart timeEnd playing step">
+  <template>
+
+    <div flex layout horizontal>
+      <core-icon-button onClick="{{play}}" aria-label="play" icon='play-arrow'></core-icon-button>
+      <core-icon-button aria-lable=stop icon="stop"></core-icon-button>
+    </div>
+
+    <style>
+      :host{
+        height: 30px;
+        border-top: 1px solid white;
+      }
+      :host /deep/ core-icon{
+        color:white;
+      }
+      core-icon-button{
+        color: white;
+      }
+    </style>
+  </template>
+  <script>
+    Polymer('balloon-controlls', {
+      step: 0.5,
+      time: 0,
+      domReady:function(){
+        this.update();
+      },
+      play:function(){
+        this.playing = true;
+      },
+      stop:function(){
+        this.playing = false;
+      },
+      update:function(){
+        requestAnimationFrame(this.update.bind(this))
+        if(this.playing){
+
+          this.time += this.step;
+          if(this.time > this.timeEnd){
+            this.time= timeEnd;
+            this.playing = false;
+          }
+        }
+      }
+    })
+  </script>
+
+</polymer-element>

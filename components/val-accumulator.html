@@ -1,0 +1,43 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<polymer-element name="val-accumulator" attributes="data values keep total average calc shouldCalcAverage shouldCalcTotal ">
+  <template>
+    <style>
+    </style>
+  </template>
+
+  <script>
+    Polymer('val-accumulator', {
+      values: [],
+      keep: 5,
+      average: 0,
+      total:0,
+      shouldCalcTotal: false,
+      shouldCalcAverage: false,
+      dataChanged:function(){
+        this.values.push(this.data)
+
+
+        if(this.values.length > this.keep){
+          this.values = this.values.slice(1,-1)
+        }
+        if(this.shouldCalcTotal)   {this.calcTotal()}
+        if(this.shouldCalcAverage) {this.calcAverage()}
+      },
+      valuesChanged: function(){
+        this.calcAverage()
+        this.calcTotal()
+      },
+      calcAverage:function(){
+        this.average = this.total*1.0 / (1.0*this.values.count)
+      },
+      calcTotal:function(){
+        total = 0
+        this.values.forEach(function(val){
+          total+=val;
+        })
+        this.total = total;
+      }
+    })
+  </script>
+</polymer-element>

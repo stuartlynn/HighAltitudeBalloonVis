@@ -1,0 +1,43 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="./val-accumulator.html">
+
+<polymer-element name="guage-widget" attributes="val name radius maxVal minVal gaugeHeight width height thickness">
+<template>
+
+  <div id="outer" width={{width}} height={{height}}>
+    <div id="inner" width="{{ val | scale }}" > </div>
+  </div>
+
+  <p {{data}} </p>
+  <p> {{name}} </p>
+
+  <style>
+    #outer{
+      border: grey 1px solid;
+      box-sizing: border-box;
+      padding: 5px;
+    }
+    #inner{
+      background-color: red;
+      -webkit-transition: width 2s;
+      transition:width 2s;
+    }
+  </style>
+  </template>
+
+    <script>
+    Polymer('guage-widget',{
+      gaugeHeight:20,
+
+      domReady: function(){
+        this.width = (this.width ? this.width : this.offsetWidth)
+        this.height = (this.height ? this.height : this.offsetHeight)
+        this.style.width = this.width;
+        this.style.height = this.height;
+      },
+      scale:function(){
+        return (val-minVal)*this.width/(maxVal-maxVal)
+      }
+    })
+    </script>
+  </polymer-element>

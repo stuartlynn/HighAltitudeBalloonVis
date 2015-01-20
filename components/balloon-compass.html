@@ -1,0 +1,26 @@
+<polymer-element name="balloon-compass" attributes="data width height counter">
+<template>
+  <div id="outer-container" vertical layout>
+    <div id="container" flex horizontal layout>
+      <div id='leftContent' vertical layout>
+        <simple-data-display data={{currentData.temp.temp}} name='temprature'></simple-data-display>
+        <simple-data-display data={{currentData.heading.heading_offset_tilt_corr}} name='heading'></simple-data-display>
+        <simple-data-display data={{time}}   name='time'></simple-data-display>
+      </div>
+
+      <orientation-viz data={{currentData.pitch_roll_yaw}} flex></orientation-viz>
+
+      <div id='rightContent' vertical layout>
+        <simple-data-display data={{currentData.pitch_roll_yaw.pitch}} name='pitch'></simple-data-display>
+        <simple-data-display data={{currentData.pitch_roll_yaw.roll}}  name='roll'></simple-data-display>
+        <simple-data-display data={{currentData.pitch_roll_yaw.yaw}}   name='yaw'></simple-data-display>
+      </div>
+
+    </div>
+
+    <balloon-controlls id='controlls' time={{time}} play={{playing}} ></balloon-controlls>
+    <core-ajax auto  url="/result.json" handleAs="json" on-core-response={{gotData}}></core-ajax>
+
+  </div>
+
+  <style>

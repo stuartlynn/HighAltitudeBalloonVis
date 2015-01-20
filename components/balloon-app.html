@@ -1,0 +1,94 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="./orientation-viz.html">
+<link rel="import" href="./balloon-controlls.html">
+<link rel="import" href="./balloon-map.html">
+<link rel="import" href="./gauge-widget.html">
+<link rel="import" href="./simple-data-display.html">
+
+
+<polymer-element name="balloon-app" attributes="data width height counter">
+  <template>
+    <div id="outer-container" vertical layout>
+      <div id="container" flex horizontal layout>
+        <div id='leftContent' vertical layout>
+          <simple-data-display data={{currentData.temp.temp}} name='temprature'></simple-data-display>
+          <simple-data-display data={{currentData.heading.heading_offset_tilt_corr}} name='heading'></simple-data-display>
+          <simple-data-display data={{currentData.gps.alt}} name='altitude'></simple-data-display>
+          <simple-data-display data="{{time | timeFormat}}"   name='time'></simple-data-display>
+        </div>
+
+        <div flex id="centerContent" vertical layout>
+          <orientation-viz data={{currentData.pitch_roll_yaw}}></orientation-viz>
+          <balloon-map lat={{currentData.gps.lat}} lng={{currentData.gps.lng}}></balloon-map>
+        </div>
+
+
+        <div id='rightContent' vertical layout>
+          <simple-data-display data={{currentData.pitch_roll_yaw.pitch}} name='pitch'></simple-data-display>
+          <simple-data-display data={{currentData.pitch_roll_yaw.roll}}  name='roll'></simple-data-display>
+          <simple-data-display data={{currentData.pitch_roll_yaw.yaw}}   name='yaw'></simple-data-display>
+          <simple-data-display data={{currentData.gps.lat}} name='lat'></simple-data-display>
+          <simple-data-display data={{currentData.gps.lng}} name='lng'></simple-data-display>
+        </div>
+
+      </div>
+
+      <balloon-controlls id='controlls' time={{time}} play={{playing}} ></balloon-controlls>
+      <core-ajax auto  url="/result.json" handleAs="json" on-core-response={{gotData}}></core-ajax>
+
+    </div>
+
+    <style>
+      #outer-container{
+        height: 100%
+      }
+      #leftContent{
+        width: 25%;
+      }
+
+      #centerContent{
+        width:50%;
+        height: 100%;
+      }
+      orientation-viz{
+        height:50%;
+        width:100%;
+      }
+      balloon-map{
+        height:50%;
+        width:100%;
+      }
+      #rightContent{
+        width: 25%;
+      }
+      #orientation-viz{
+        height: 50%
+      }
+      #map-viz{
+        height: 50%
+      }
+    </style>
+  </template>
+
+  <script>
+    Polymer('balloon-app', {
+      data : [],
+      dataReady: false,
+      time: 0,
+      playing: false,
+      gotData: function(data){
+
+        this.fullData = data.detail.response;
+        this.dataReady = true;
+        this.$.controlls.play()
+      },
+      timeChanged:function(){
+        this.currentData = this.fullData[Math.floor(this.time)]
+      },
+      timeFormat:function(time){
+        return Math.round(time/5.0)
+      }
+    })
+  </script>
+</polymer-element>
